@@ -6,6 +6,7 @@ import birthdaykata.domain.greetings.HappyBirthdayChannel;
 import birthdaykata.domain.greetings.user.UserGreetingTemplate;
 import birthdaykata.domain.models.User;
 import birthdaykata.infrastructure.flatFile.domain.models.FlatFileUserFactory;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -41,7 +42,10 @@ public class EmailBirthdayChannelTest {
         HappyBirthdayChannel happyBirthdayChannel = new EmailBirthdayChannel(template, emailSender);
 
         //test
-        happyBirthdayChannel.congratulations(user);
+        User congratulated = happyBirthdayChannel.congratulations(user);
+
+        //validate
+        Assertions.assertThat(congratulated).isEqualTo(user);
 
         //verify
         Greeting userGreeting = Greeting.builder()

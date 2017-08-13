@@ -12,7 +12,7 @@ public class EmailBirthdayChannel implements HappyBirthdayChannel {
     private final UserGreetingTemplate template;
     private final EmailGreetingSender sender;
 
-    public EmailBirthdayChannel(UserGreetingTemplate template) {
+    private EmailBirthdayChannel(UserGreetingTemplate template) {
         this(template, new EmailGreetingSender());
     }
 
@@ -22,10 +22,12 @@ public class EmailBirthdayChannel implements HappyBirthdayChannel {
     }
 
     @Override
-    public void congratulations(User user) throws CommunicationException {
+    public User congratulations(User user) throws CommunicationException {
         final Greeting greeting = template.personalize(user);
 
         sender.sendEmail(user.getEmail(), greeting);
+
+        return user;
     }
 
 
