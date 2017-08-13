@@ -6,17 +6,21 @@ import birthdaykata.domain.repositories.RepositoryNotAvailableException;
 import birthdaykata.domain.repositories.UserRepository;
 import birthdaykata.infrastructure.flatFile.domain.models.FlatFileUserFactory;
 import com.lambdista.util.Try;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class FlatFileRepository implements UserRepository {
+
+
+    private static final Logger LOGGER = Logger.getLogger(FlatFileRepository.class);
+
 
     public static final String FILE_SEPARATOR = ",";
     private final Path path;
@@ -44,12 +48,16 @@ public class FlatFileRepository implements UserRepository {
 
     @Override
     public List<User> getAll()  {
-        return readAllLines().stream()
+        List<User> userList = readAllLines().stream()
                 .filter(byNotEmpty())
                 .filter(byNotHeader())
                 .map(line -> line.split(FILE_SEPARATOR))
                 .map(userFactory::fromRecord)
                 .collect(Collectors.toList());
+
+        LOGGER.debug("getAll>>"+userList.size()+" users restrieved>>"+userList.stream().map(User::getEmail).collect(Collectors.toList()));
+
+        return userList;
 
     }
 
