@@ -30,12 +30,4 @@ public class EmailBirthdayChannel implements HappyBirthdayChannel {
         return user;
     }
 
-
-    public static class Factory implements HappyBirthdayChannel.Factory {
-        @Override
-        public HappyBirthdayChannel newOne(UserGreetingTemplate greetingTemplate) {
-            return new EmailBirthdayChannel(greetingTemplate);
-        }
-    }
-
 }

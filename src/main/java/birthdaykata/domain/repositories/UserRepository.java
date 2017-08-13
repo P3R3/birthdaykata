@@ -8,10 +8,4 @@ public interface UserRepository {
 
     List<User> getAll() throws RepositoryNotAvailableException;
 
-    interface Factory {
-        UserRepository newOne();
-    }
-
-
-
 }
