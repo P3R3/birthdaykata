@@ -1,22 +1,36 @@
 package birthdaykata;
 
-import org.junit.Assert;
+import birthdaykata.businesslogic.CongratulationsReport;
+import birthdaykata.businesslogic.HappyBirthdayUserService;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
-/**
- * Unit test for simple App.
- */
+@RunWith(MockitoJUnitRunner.class)
 public class AppTest
 {
+
+    @Mock
+    private HappyBirthdayUserService service ;
+
+    @Mock
+    private CongratulationsReport report;
+
+    @InjectMocks
+    private App application;
 
     @Test
     public void testApp()
     {
+        //test
+        application.run();
 
-
-        Assert.assertTrue(true);
-
-
+        //verify
+        Mockito.verify(service).congratulatesEveryone(report);
+        Mockito.verify(report).print();
     }
 }
 

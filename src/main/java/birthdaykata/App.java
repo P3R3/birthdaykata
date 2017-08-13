@@ -13,42 +13,50 @@ import birthdaykata.infrastructure.flatFile.domain.repositories.FlatFileReposito
 public class App 
 {
 
-    private final UserGreetingTemplate happyBirthdayTemplate;
-
-    private final HappyBirthdayChannel channel;
-
-    private final UserRepository repository ;
-
+    //use case for communicate a happy birthday to all users
     private final HappyBirthdayUserService service ;
+
+    //aplicacion component to inform to the user interface
+    private final CongratulationsReport report;
+
+    public App() {
+        //transform a text with tags to a personalized greeting
+        final UserGreetingTemplate  happyBirthdayTemplate = UserGreetingTemplate.builder()
+                .withTitle("Happy birthday!")
+                .withMessage("Happy birthday, dear {USER_FIRST_NAME}!")
+                .build();
+
+        //make a happy birthday communication
+        final HappyBirthdayChannel channel = new EmailBirthdayChannel(happyBirthdayTemplate);
+
+        //component for retrieve users
+        final UserRepository repository = new FlatFileRepository(getFileRepositoryPath());
+
+        //intances the bussiness logic
+        service = new HappyBirthdayUserServiceImpl(repository, channel);
+
+        //set a console report informer
+        report = new AppCongratulationsReport();
+    }
 
     private String getFileRepositoryPath() {
         ClassLoader classLoader = getClass().getClassLoader();
         return classLoader.getResource("users.txt").getPath();
     }
 
-    public App() {
-        happyBirthdayTemplate = UserGreetingTemplate.builder()
-                .withTitle("Happy birthday!")
-                .withMessage("Happy birthday, dear {USER_FIRST_NAME}!")
-                .build();
-
-        channel = new EmailBirthdayChannel(happyBirthdayTemplate);
-
-        repository = new FlatFileRepository(getFileRepositoryPath());
-
-        service = new HappyBirthdayUserServiceImpl(repository, channel);
+    public App(HappyBirthdayUserService service, CongratulationsReport report) {
+        this.service = service;
+        this.report = report;
     }
 
+    public void run() {
+        service.congratulatesEveryone(report);
 
+        report.print();
+    }
 
     public static void main(String[] args )
     {
-
-        final CongratulationsReport report = new AppCongratulationsReport();
-
-        new App().service.congratulatesEveryone(report);
-
-        report.print();
-
+        new App().run();
     }
 }
