@@ -12,7 +12,7 @@ public class EmailBirthdayChannel implements HappyBirthdayChannel {
     private final UserGreetingTemplate template;
     private final EmailGreetingSender sender;
 
-    private EmailBirthdayChannel(UserGreetingTemplate template) {
+    public EmailBirthdayChannel(UserGreetingTemplate template) {
         this(template, new EmailGreetingSender());
     }
 
